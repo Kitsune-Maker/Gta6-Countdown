@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="ka">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>GTA VI Countdown</title>
+<title>GTA VI უკუთვლა</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;500;700;800&family=Noto+Sans+Georgian:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  /* Layout: one full-screen scene. Blurred trailer behind a pink/orange wash, wordmark centred, thin-weight countdown, small nav on top. */
+  /* Layout: one full-screen scene. Blurred 720p trailer behind a pink/orange wash, wordmark centred, thin-weight countdown, small nav on top. */
   :root{
     --night:#12061f;
     --violet:#5b2a9e;
@@ -16,13 +16,14 @@
     --coral:#ff7a59;
     --amber:#ffb347;
     --ink:#ffffff;
-    --soft:rgba(255,255,255,.72);
-    --font:"Montserrat","Helvetica Neue",Arial,sans-serif;
+    --soft:rgba(255,255,255,.76);
+    --font:"Montserrat","Noto Sans Georgian","Helvetica Neue",Arial,sans-serif;
+    --font-ka:"Noto Sans Georgian","Montserrat","Helvetica Neue",Arial,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0;background:var(--night);color:var(--ink);font-family:var(--font);
+    margin:0;background:var(--night);color:var(--ink);font-family:var(--font-ka);
     min-height:100svh;display:flex;flex-direction:column;overflow-x:hidden;
     padding-left:max(20px,env(safe-area-inset-left,0px));
     padding-right:max(20px,env(safe-area-inset-right,0px));
@@ -40,10 +41,11 @@
   @keyframes drift{from{transform:scale(1) translate3d(0,0,0)}to{transform:scale(1.08) translate3d(-1.5%,-1%,0)}}
 
   .video{z-index:1;overflow:hidden}
+  /* The player is fixed at 1280x720 so YouTube serves 720p, then scaled up to cover the screen (script sets the scale) */
   .video iframe{
     position:absolute;top:50%;left:50%;border:0;
-    width:max(100vw,177.78svh);height:max(56.25vw,100svh);
-    transform:translate(-50%,-50%) scale(1.1);
+    width:1280px;height:720px;
+    transform:translate(-50%,-50%) scale(1.5);
     filter:blur(12px) saturate(1.35) brightness(.8);
     opacity:0;transition:opacity 1.8s ease;
   }
@@ -72,7 +74,7 @@
     padding-block:max(22px,env(safe-area-inset-top,0px)) 0;
   }
   .brand{
-    font-weight:800;font-size:1.15rem;letter-spacing:.06em;
+    font-family:var(--font);font-weight:800;font-size:1.15rem;letter-spacing:.06em;
     display:flex;align-items:baseline;gap:.35em;
   }
   .brand b{
@@ -83,7 +85,7 @@
   .menu{display:flex;flex-wrap:wrap;gap:6px 26px;align-items:center}
   .link{
     appearance:none;background:none;border:0;cursor:pointer;color:var(--soft);
-    font:500 .72rem/1 var(--font);letter-spacing:.24em;text-transform:uppercase;
+    font:500 .85rem/1 var(--font-ka);letter-spacing:.06em;
     padding:10px 0;position:relative;transition:color .2s;
   }
   .link::after{
@@ -101,31 +103,34 @@
   }
   h1{margin:0;display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);line-height:1}
   .gta{
-    font-weight:700;font-size:clamp(.78rem,2.4vw,1.25rem);letter-spacing:.62em;padding-left:.62em;text-transform:uppercase;
+    font-weight:700;font-size:clamp(.95rem,3vw,1.5rem);letter-spacing:.3em;padding-left:.3em;
     text-shadow:0 2px 20px rgba(0,0,0,.4);
   }
   .vi{
+    font-family:var(--font);
     font-weight:800;font-size:clamp(7.5rem,31vw,21rem);line-height:.8;letter-spacing:-.04em;padding:.04em .06em .1em 0;
     background:linear-gradient(180deg,#ff3f9a 6%,#ff6b6b 42%,#ff9a4d 74%,#ffc063 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
     filter:drop-shadow(0 12px 44px rgba(255,79,163,.4));
   }
   .date{
-    margin:0;font-weight:500;font-size:clamp(.72rem,2vw,1rem);letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;
-    display:flex;flex-wrap:wrap;gap:6px 1.2em;justify-content:center;color:var(--soft);
+    margin:0;font-weight:500;font-size:clamp(.9rem,2.4vw,1.2rem);letter-spacing:.14em;padding-left:.14em;
+    display:flex;flex-wrap:wrap;gap:6px 1em;justify-content:center;color:var(--soft);
   }
   .date b{color:var(--ink);font-weight:700}
 
   .clock{display:flex;justify-content:center;align-items:flex-start;gap:clamp(6px,2.4vw,34px);margin:clamp(6px,2vh,20px) 0 0;padding:0;list-style:none}
   .unit{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);min-width:0}
   .num{
+    font-family:var(--font);
     font-weight:300;font-size:clamp(2.5rem,10.4vw,8.4rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
     text-shadow:0 4px 40px rgba(255,79,163,.45);
   }
   .num.tick{animation:tick .5s cubic-bezier(.2,.8,.2,1)}
   @keyframes tick{from{transform:translateY(-22%);opacity:.15}to{transform:none;opacity:1}}
-  .tag{font-weight:500;font-size:clamp(.58rem,1.5vw,.78rem);letter-spacing:.4em;padding-left:.4em;text-transform:uppercase;color:var(--soft)}
+  .tag{font-weight:500;font-size:clamp(.72rem,1.8vw,.95rem);letter-spacing:.12em;color:var(--soft)}
   .sep{
+    font-family:var(--font);
     font-weight:200;font-size:clamp(2.5rem,10.4vw,8.4rem);line-height:1;color:rgba(255,255,255,.4);
     animation:blink 2s ease-in-out infinite;
   }
@@ -136,25 +141,25 @@
     display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:space-between;
     padding-block:18px max(22px,env(safe-area-inset-bottom,0px));
     border-top:1px solid rgba(255,255,255,.18);
-    font-weight:500;font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--soft);
+    font-weight:500;font-size:.8rem;letter-spacing:.08em;color:var(--soft);
   }
-  .base .plat{display:flex;gap:6px 22px;flex-wrap:wrap}
+  .base .plat{display:flex;gap:6px 22px;flex-wrap:wrap;font-family:var(--font)}
   .meter{display:flex;align-items:center;gap:14px;flex:1 1 280px;max-width:520px}
   .rail{flex:1;height:2px;background:rgba(255,255,255,.2);min-width:60px}
   .rail i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--amber));transition:width 1.4s ease}
   .meter span{white-space:nowrap}
-  .fan{flex-basis:100%;font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:none;opacity:.7}
+  .fan{margin:0;flex-basis:100%;font-weight:400;font-size:.72rem;letter-spacing:.03em;opacity:.7;line-height:1.5}
 
   /* ---------- trailer notice ---------- */
   .notice{
-    position:fixed;z-index:9;left:max(20px,env(safe-area-inset-left,0px));bottom:max(96px,calc(env(safe-area-inset-bottom,0px) + 90px));
-    max-width:min(420px,calc(100vw - 40px));
-    padding:14px 16px;background:rgba(18,6,31,.82);border:1px solid rgba(255,255,255,.2);border-left:3px solid var(--pink);
+    position:fixed;z-index:9;left:max(20px,env(safe-area-inset-left,0px));bottom:max(110px,calc(env(safe-area-inset-bottom,0px) + 104px));
+    max-width:min(440px,calc(100vw - 40px));
+    padding:14px 16px;background:rgba(18,6,31,.84);border:1px solid rgba(255,255,255,.2);border-left:3px solid var(--pink);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-    font-weight:400;font-size:.8rem;line-height:1.5;color:var(--soft);
+    font-weight:400;font-size:.82rem;line-height:1.65;color:var(--soft);
   }
   .notice[hidden]{display:none}
-  .notice a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:2px solid var(--pink)}
+  .notice a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:2px solid var(--pink);white-space:nowrap}
   .notice code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.76rem;color:var(--amber)}
 
   @media (max-width:560px){
@@ -178,43 +183,43 @@
 
 <header class="nav">
   <div class="brand"><span>GTA</span><b>VI</b></div>
-  <nav class="menu" aria-label="Trailer controls">
-    <button class="link" type="button" id="t1" aria-pressed="false">Trailer 1</button>
-    <button class="link" type="button" id="t2" aria-pressed="true">Trailer 2</button>
-    <button class="link" type="button" id="sound" aria-pressed="false">Sound off</button>
-    <button class="link" type="button" id="vid" aria-pressed="true">Video on</button>
+  <nav class="menu" aria-label="ტრეილერის მართვა">
+    <button class="link" type="button" id="t1" aria-pressed="false">ტრეილერი 1</button>
+    <button class="link" type="button" id="t2" aria-pressed="true">ტრეილერი 2</button>
+    <button class="link" type="button" id="sound" aria-pressed="false">ხმა გამორთულია</button>
+    <button class="link" type="button" id="vid" aria-pressed="true">ვიდეო ჩართულია</button>
   </nav>
 </header>
 
 <main class="hero">
   <h1>
-    <span class="gta">Grand Theft Auto</span>
-    <span class="vi" aria-label="Six">VI</span>
+    <span class="gta">გრანდ თეფთ ოუტო</span>
+    <span class="vi" aria-label="ექვსი">VI</span>
   </h1>
-  <p class="date"><span>Coming</span><b id="dateLine">November 19, 2026</b></p>
+  <p class="date"><span>გამოდის</span><b id="dateLine">19 ნოემბერი, 2026</b></p>
 
   <ol class="clock" id="clock">
-    <li class="unit"><span class="num" id="d">00</span><span class="tag">Days</span></li>
+    <li class="unit"><span class="num" id="d">00</span><span class="tag">დღე</span></li>
     <li class="sep" aria-hidden="true">:</li>
-    <li class="unit"><span class="num" id="h">00</span><span class="tag">Hours</span></li>
+    <li class="unit"><span class="num" id="h">00</span><span class="tag">საათი</span></li>
     <li class="sep" aria-hidden="true">:</li>
-    <li class="unit"><span class="num" id="m">00</span><span class="tag">Minutes</span></li>
+    <li class="unit"><span class="num" id="m">00</span><span class="tag">წუთი</span></li>
     <li class="sep" aria-hidden="true">:</li>
-    <li class="unit"><span class="num" id="s">00</span><span class="tag">Seconds</span></li>
+    <li class="unit"><span class="num" id="s">00</span><span class="tag">წამი</span></li>
   </ol>
 </main>
 
 <div class="notice" id="notice" hidden>
-  The trailer is blocked here. YouTube refuses embeds from a page opened as a plain file. Serve the folder with <code>python3 -m http.server</code> and open <code>localhost:8000</code>, or host the file anywhere.
-  <a id="ytlink" href="https://www.youtube.com/watch?v=VQRLujxTm3c" target="_blank" rel="noopener">Watch on YouTube</a>
+  ტრეილერი აქ დაბლოკილია. YouTube არ აჩვენებს ჩაშენებულ ვიდეოს, როცა გვერდი ჩვეულებრივ ფაილად იხსნება. გახსენი საქაღალდეში ტერმინალი, გაუშვი <code>python3 -m http.server</code> და ბრაუზერში ჩართე <code>localhost:8000</code>, ან ატვირთე ფაილი ნებისმიერ ჰოსტინგზე.
+  <a id="ytlink" href="https://www.youtube.com/watch?v=VQRLujxTm3c" target="_blank" rel="noopener">უყურე YouTube-ზე</a>
 </div>
 
 <footer class="base">
   <div class="plat"><span>PlayStation 5</span><span>Xbox Series X|S</span></div>
-  <div class="meter" aria-label="Share of the wait since Trailer 1">
-    <span>Trailer 1</span><div class="rail"><i id="bar"></i></div><span id="pct">0%</span>
+  <div class="meter" aria-label="მოლოდინის პროგრესი პირველი ტრეილერიდან">
+    <span>ტრეილერი 1</span><div class="rail"><i id="bar"></i></div><span id="pct">0%</span>
   </div>
-  <p class="fan">Unofficial fan page. Not affiliated with Rockstar Games or Take-Two Interactive. Trailers stream from YouTube.</p>
+  <p class="fan">არაოფიციალური ფანების გვერდი. არ არის დაკავშირებული Rockstar Games-თან ან Take-Two Interactive-თან. ტრეილერები გადმოდის YouTube-დან.</p>
 </footer>
 
 <script src="https://www.youtube.com/iframe_api" async></script>
@@ -244,7 +249,7 @@
     document.getElementById("t1").setAttribute("aria-pressed", current === "t1");
     document.getElementById("t2").setAttribute("aria-pressed", current === "t2");
     soundBtn.setAttribute("aria-pressed", soundOn);
-    soundBtn.textContent = soundOn ? "Sound on" : "Sound off";
+    soundBtn.textContent = soundOn ? "ხმა ჩართულია" : "ხმა გამორთულია";
     ytlink.href = "https://www.youtube.com/watch?v=" + TRAILERS[current];
   }
   function watchdog(){
@@ -252,20 +257,32 @@
     playTimer = setTimeout(function(){ if(!videoBox.classList.contains("playing")) showNotice(); }, 8000);
   }
 
+  // Keep the 1280x720 player scaled to cover the screen. YouTube picks quality from the player size, so this keeps it at 720p.
+  function fit(){
+    var f = videoBox.querySelector("iframe");
+    if(!f) return;
+    var s = Math.max(window.innerWidth / 1280, window.innerHeight / 720) * 1.1;
+    f.style.transform = "translate(-50%,-50%) scale(" + s.toFixed(4) + ")";
+  }
+  window.addEventListener("resize", fit);
+  function hd(){ try{ player.setPlaybackQuality("hd720"); }catch(e){} }
+
   window.onYouTubeIframeAPIReady = function(){
     player = new YT.Player("player", {
       host: "https://www.youtube-nocookie.com",
+      width: 1280, height: 720,
       videoId: TRAILERS[current],
-      playerVars: { autoplay:1, mute:1, controls:0, playsinline:1, rel:0, modestbranding:1, disablekb:1, iv_load_policy:3, fs:0 },
+      playerVars: { autoplay:1, mute:1, controls:0, playsinline:1, rel:0, modestbranding:1, disablekb:1, iv_load_policy:3, fs:0, hl:"ka", cc_lang_pref:"ka" },
       events: {
-        onReady: function(e){ ready = true; e.target.mute(); e.target.playVideo(); watchdog(); },
+        onReady: function(e){ ready = true; fit(); e.target.mute(); e.target.playVideo(); hd(); watchdog(); },
         onStateChange: function(e){
-          if(e.data === 1){ videoBox.classList.add("playing"); notice.hidden = true; clearTimeout(playTimer); }
+          if(e.data === 1){ videoBox.classList.add("playing"); notice.hidden = true; clearTimeout(playTimer); hd(); }
           if(e.data === 0){ e.target.seekTo(0); e.target.playVideo(); }
         },
         onError: function(){ showNotice(); }
       }
     });
+    fit();
   };
   setTimeout(function(){ if(!window.YT || !window.YT.Player) showNotice(); }, 8000);
 
@@ -275,7 +292,7 @@
     videoBox.classList.remove("playing");
     setPoster(TRAILERS[key]);
     syncUI();
-    if(ready){ player.mute(); player.loadVideoById(TRAILERS[key]); watchdog(); }
+    if(ready){ player.mute(); player.loadVideoById({ videoId: TRAILERS[key], suggestedQuality: "hd720" }); watchdog(); }
   }
 
   document.getElementById("t1").addEventListener("click", function(){ if(current !== "t1") load("t1"); });
@@ -291,7 +308,7 @@
     if(ready){ videoOn ? player.playVideo() : player.pauseVideo(); }
     if(!videoOn) notice.hidden = true;
     vidBtn.setAttribute("aria-pressed", videoOn);
-    vidBtn.textContent = videoOn ? "Video on" : "Video off";
+    vidBtn.textContent = videoOn ? "ვიდეო ჩართულია" : "ვიდეო გამორთულია";
   });
 
   /* ---------- countdown ---------- */
@@ -313,7 +330,7 @@
     var now = new Date(), diff = TARGET - now;
     if(diff <= 0){
       set("d",0); set("h",0); set("m",0); set("s",0);
-      document.getElementById("dateLine").textContent = "Out now";
+      document.getElementById("dateLine").textContent = "უკვე გამოვიდა";
       bar.style.width = "100%"; pct.textContent = "100%";
       return;
     }
