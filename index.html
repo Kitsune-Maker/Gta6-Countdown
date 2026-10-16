@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GTA VI Countdown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one full-screen scene. Blurred trailer behind a pink/orange wash, wordmark centred, thin-weight countdown, small nav on top. */
+  :root{
+    --night:#12061f;
+    --violet:#5b2a9e;
+    --pink:#ff4fa3;
+    --coral:#ff7a59;
+    --amber:#ffb347;
+    --ink:#ffffff;
+    --soft:rgba(255,255,255,.72);
+    --font:"Montserrat","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--night);color:var(--ink);font-family:var(--font);
+    min-height:100svh;display:flex;flex-direction:column;overflow-x:hidden;
+    padding-left:max(20px,env(safe-area-inset-left,0px));
+    padding-right:max(20px,env(safe-area-inset-right,0px));
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- scene ---------- */
+  .poster,.video,.wash,.grain,.glow{position:fixed;inset:0;pointer-events:none}
+  .poster{z-index:0;overflow:hidden;background:linear-gradient(180deg,#2a0f4a,#8a2a7a 55%,#ff7a59)}
+  .poster img{
+    position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;
+    filter:blur(14px) saturate(1.3) brightness(.8);
+    animation:drift 40s ease-in-out infinite alternate;
+  }
+  @keyframes drift{from{transform:scale(1) translate3d(0,0,0)}to{transform:scale(1.08) translate3d(-1.5%,-1%,0)}}
+
+  .video{z-index:1;overflow:hidden}
+  .video iframe{
+    position:absolute;top:50%;left:50%;border:0;
+    width:max(100vw,177.78svh);height:max(56.25vw,100svh);
+    transform:translate(-50%,-50%) scale(1.1);
+    filter:blur(12px) saturate(1.35) brightness(.8);
+    opacity:0;transition:opacity 1.8s ease;
+  }
+  .video.playing iframe{opacity:1}
+  .video.off{display:none}
+
+  .wash{
+    z-index:2;
+    background:
+      radial-gradient(120% 85% at 50% 45%,rgba(18,6,31,0) 30%,rgba(18,6,31,.78) 100%),
+      linear-gradient(180deg,rgba(60,20,110,.50) 0%,rgba(255,79,163,.16) 52%,rgba(255,122,89,.34) 100%);
+  }
+  .glow{
+    z-index:3;mix-blend-mode:screen;opacity:.55;
+    background:radial-gradient(50% 36% at 50% 46%,rgba(255,122,89,.55),transparent 70%);
+  }
+  .grain{
+    z-index:4;opacity:.16;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* ---------- nav ---------- */
+  .nav,.hero,.base{position:relative;z-index:6}
+  .nav{
+    display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;
+    padding-block:max(22px,env(safe-area-inset-top,0px)) 0;
+  }
+  .brand{
+    font-weight:800;font-size:1.15rem;letter-spacing:.06em;
+    display:flex;align-items:baseline;gap:.35em;
+  }
+  .brand b{
+    font-weight:800;
+    background:linear-gradient(180deg,var(--pink),var(--coral) 70%,var(--amber));
+    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  }
+  .menu{display:flex;flex-wrap:wrap;gap:6px 26px;align-items:center}
+  .link{
+    appearance:none;background:none;border:0;cursor:pointer;color:var(--soft);
+    font:500 .72rem/1 var(--font);letter-spacing:.24em;text-transform:uppercase;
+    padding:10px 0;position:relative;transition:color .2s;
+  }
+  .link::after{
+    content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;
+    background:linear-gradient(90deg,var(--pink),var(--amber));transform:scaleX(0);transform-origin:left;transition:transform .25s;
+  }
+  .link:hover,.link[aria-pressed="true"]{color:var(--ink)}
+  .link:hover::after,.link[aria-pressed="true"]::after{transform:scaleX(1)}
+  .link:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+
+  /* ---------- hero ---------- */
+  .hero{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    gap:clamp(20px,4vh,40px);padding-block:clamp(20px,4vh,48px);
+  }
+  h1{margin:0;display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.4vh,14px);line-height:1}
+  .gta{
+    font-weight:700;font-size:clamp(.78rem,2.4vw,1.25rem);letter-spacing:.62em;padding-left:.62em;text-transform:uppercase;
+    text-shadow:0 2px 20px rgba(0,0,0,.4);
+  }
+  .vi{
+    font-weight:800;font-size:clamp(7.5rem,31vw,21rem);line-height:.8;letter-spacing:-.04em;padding:.04em .06em .1em 0;
+    background:linear-gradient(180deg,#ff3f9a 6%,#ff6b6b 42%,#ff9a4d 74%,#ffc063 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 12px 44px rgba(255,79,163,.4));
+  }
+  .date{
+    margin:0;font-weight:500;font-size:clamp(.72rem,2vw,1rem);letter-spacing:.5em;padding-left:.5em;text-transform:uppercase;
+    display:flex;flex-wrap:wrap;gap:6px 1.2em;justify-content:center;color:var(--soft);
+  }
+  .date b{color:var(--ink);font-weight:700}
+
+  .clock{display:flex;justify-content:center;align-items:flex-start;gap:clamp(6px,2.4vw,34px);margin:clamp(6px,2vh,20px) 0 0;padding:0;list-style:none}
+  .unit{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1.2vh,12px);min-width:0}
+  .num{
+    font-weight:300;font-size:clamp(2.5rem,10.4vw,8.4rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+    text-shadow:0 4px 40px rgba(255,79,163,.45);
+  }
+  .num.tick{animation:tick .5s cubic-bezier(.2,.8,.2,1)}
+  @keyframes tick{from{transform:translateY(-22%);opacity:.15}to{transform:none;opacity:1}}
+  .tag{font-weight:500;font-size:clamp(.58rem,1.5vw,.78rem);letter-spacing:.4em;padding-left:.4em;text-transform:uppercase;color:var(--soft)}
+  .sep{
+    font-weight:200;font-size:clamp(2.5rem,10.4vw,8.4rem);line-height:1;color:rgba(255,255,255,.4);
+    animation:blink 2s ease-in-out infinite;
+  }
+  @keyframes blink{50%{opacity:.25}}
+
+  /* ---------- base ---------- */
+  .base{
+    display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:space-between;
+    padding-block:18px max(22px,env(safe-area-inset-bottom,0px));
+    border-top:1px solid rgba(255,255,255,.18);
+    font-weight:500;font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--soft);
+  }
+  .base .plat{display:flex;gap:6px 22px;flex-wrap:wrap}
+  .meter{display:flex;align-items:center;gap:14px;flex:1 1 280px;max-width:520px}
+  .rail{flex:1;height:2px;background:rgba(255,255,255,.2);min-width:60px}
+  .rail i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--amber));transition:width 1.4s ease}
+  .meter span{white-space:nowrap}
+  .fan{flex-basis:100%;font-weight:400;font-size:.62rem;letter-spacing:.14em;text-transform:none;opacity:.7}
+
+  /* ---------- trailer notice ---------- */
+  .notice{
+    position:fixed;z-index:9;left:max(20px,env(safe-area-inset-left,0px));bottom:max(96px,calc(env(safe-area-inset-bottom,0px) + 90px));
+    max-width:min(420px,calc(100vw - 40px));
+    padding:14px 16px;background:rgba(18,6,31,.82);border:1px solid rgba(255,255,255,.2);border-left:3px solid var(--pink);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    font-weight:400;font-size:.8rem;line-height:1.5;color:var(--soft);
+  }
+  .notice[hidden]{display:none}
+  .notice a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:2px solid var(--pink)}
+  .notice code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.76rem;color:var(--amber)}
+
+  @media (max-width:560px){
+    .menu{gap:2px 18px}
+    .base{justify-content:center;text-align:center}
+    .meter{max-width:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .poster img,.sep,.num.tick{animation:none}
+    .rail i{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="poster" aria-hidden="true"><img id="poster" alt="" decoding="async"></div>
+<div class="video" id="video" aria-hidden="true"><div id="player"></div></div>
+<div class="wash" aria-hidden="true"></div>
+<div class="glow" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="brand"><span>GTA</span><b>VI</b></div>
+  <nav class="menu" aria-label="Trailer controls">
+    <button class="link" type="button" id="t1" aria-pressed="false">Trailer 1</button>
+    <button class="link" type="button" id="t2" aria-pressed="true">Trailer 2</button>
+    <button class="link" type="button" id="sound" aria-pressed="false">Sound off</button>
+    <button class="link" type="button" id="vid" aria-pressed="true">Video on</button>
+  </nav>
+</header>
+
+<main class="hero">
+  <h1>
+    <span class="gta">Grand Theft Auto</span>
+    <span class="vi" aria-label="Six">VI</span>
+  </h1>
+  <p class="date"><span>Coming</span><b id="dateLine">November 19, 2026</b></p>
+
+  <ol class="clock" id="clock">
+    <li class="unit"><span class="num" id="d">00</span><span class="tag">Days</span></li>
+    <li class="sep" aria-hidden="true">:</li>
+    <li class="unit"><span class="num" id="h">00</span><span class="tag">Hours</span></li>
+    <li class="sep" aria-hidden="true">:</li>
+    <li class="unit"><span class="num" id="m">00</span><span class="tag">Minutes</span></li>
+    <li class="sep" aria-hidden="true">:</li>
+    <li class="unit"><span class="num" id="s">00</span><span class="tag">Seconds</span></li>
+  </ol>
+</main>
+
+<div class="notice" id="notice" hidden>
+  The trailer is blocked here. YouTube refuses embeds from a page opened as a plain file. Serve the folder with <code>python3 -m http.server</code> and open <code>localhost:8000</code>, or host the file anywhere.
+  <a id="ytlink" href="https://www.youtube.com/watch?v=VQRLujxTm3c" target="_blank" rel="noopener">Watch on YouTube</a>
+</div>
+
+<footer class="base">
+  <div class="plat"><span>PlayStation 5</span><span>Xbox Series X|S</span></div>
+  <div class="meter" aria-label="Share of the wait since Trailer 1">
+    <span>Trailer 1</span><div class="rail"><i id="bar"></i></div><span id="pct">0%</span>
+  </div>
+  <p class="fan">Unofficial fan page. Not affiliated with Rockstar Games or Take-Two Interactive. Trailers stream from YouTube.</p>
+</footer>
+
+<script src="https://www.youtube.com/iframe_api" async></script>
+<script>
+(function(){
+  // Release: November 19, 2026, midnight in the viewer's local time. Change this line if the date moves.
+  var TARGET = new Date(2026, 10, 19, 0, 0, 0);
+  var START  = new Date(2023, 11, 5, 0, 0, 0);   // Trailer 1 week
+
+  // Rockstar Games' official uploads
+  var TRAILERS = { t1: "QdBZY2fkU-0", t2: "VQRLujxTm3c" };
+
+  var current = "t2", soundOn = false, videoOn = true, player = null, ready = false, playTimer = null;
+  var videoBox = document.getElementById("video");
+  var poster   = document.getElementById("poster");
+  var notice   = document.getElementById("notice");
+  var ytlink   = document.getElementById("ytlink");
+  var soundBtn = document.getElementById("sound");
+  var vidBtn   = document.getElementById("vid");
+
+  function showNotice(){ if(videoOn) notice.hidden = false; }
+  function setPoster(id){
+    poster.onerror = function(){ poster.onerror = null; poster.src = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg"; };
+    poster.src = "https://i.ytimg.com/vi/" + id + "/maxresdefault.jpg";
+  }
+  function syncUI(){
+    document.getElementById("t1").setAttribute("aria-pressed", current === "t1");
+    document.getElementById("t2").setAttribute("aria-pressed", current === "t2");
+    soundBtn.setAttribute("aria-pressed", soundOn);
+    soundBtn.textContent = soundOn ? "Sound on" : "Sound off";
+    ytlink.href = "https://www.youtube.com/watch?v=" + TRAILERS[current];
+  }
+  function watchdog(){
+    clearTimeout(playTimer);
+    playTimer = setTimeout(function(){ if(!videoBox.classList.contains("playing")) showNotice(); }, 8000);
+  }
+
+  window.onYouTubeIframeAPIReady = function(){
+    player = new YT.Player("player", {
+      host: "https://www.youtube-nocookie.com",
+      videoId: TRAILERS[current],
+      playerVars: { autoplay:1, mute:1, controls:0, playsinline:1, rel:0, modestbranding:1, disablekb:1, iv_load_policy:3, fs:0 },
+      events: {
+        onReady: function(e){ ready = true; e.target.mute(); e.target.playVideo(); watchdog(); },
+        onStateChange: function(e){
+          if(e.data === 1){ videoBox.classList.add("playing"); notice.hidden = true; clearTimeout(playTimer); }
+          if(e.data === 0){ e.target.seekTo(0); e.target.playVideo(); }
+        },
+        onError: function(){ showNotice(); }
+      }
+    });
+  };
+  setTimeout(function(){ if(!window.YT || !window.YT.Player) showNotice(); }, 8000);
+
+  function load(key){
+    current = key;
+    soundOn = false;
+    videoBox.classList.remove("playing");
+    setPoster(TRAILERS[key]);
+    syncUI();
+    if(ready){ player.mute(); player.loadVideoById(TRAILERS[key]); watchdog(); }
+  }
+
+  document.getElementById("t1").addEventListener("click", function(){ if(current !== "t1") load("t1"); });
+  document.getElementById("t2").addEventListener("click", function(){ if(current !== "t2") load("t2"); });
+  soundBtn.addEventListener("click", function(){
+    soundOn = !soundOn;
+    if(ready){ if(soundOn){ player.unMute(); player.setVolume(65); player.playVideo(); } else { player.mute(); } }
+    syncUI();
+  });
+  vidBtn.addEventListener("click", function(){
+    videoOn = !videoOn;
+    videoBox.classList.toggle("off", !videoOn);
+    if(ready){ videoOn ? player.playVideo() : player.pauseVideo(); }
+    if(!videoOn) notice.hidden = true;
+    vidBtn.setAttribute("aria-pressed", videoOn);
+    vidBtn.textContent = videoOn ? "Video on" : "Video off";
+  });
+
+  /* ---------- countdown ---------- */
+  var els = { d:document.getElementById("d"), h:document.getElementById("h"), m:document.getElementById("m"), s:document.getElementById("s") };
+  var last = {};
+  function pad(n){ return n < 10 ? "0" + n : String(n); }
+  function set(k, v){
+    var t = pad(v);
+    if(last[k] === t) return;
+    last[k] = t;
+    var el = els[k];
+    el.textContent = t;
+    el.classList.remove("tick");
+    void el.offsetWidth;
+    el.classList.add("tick");
+  }
+  var bar = document.getElementById("bar"), pct = document.getElementById("pct");
+  function frame(){
+    var now = new Date(), diff = TARGET - now;
+    if(diff <= 0){
+      set("d",0); set("h",0); set("m",0); set("s",0);
+      document.getElementById("dateLine").textContent = "Out now";
+      bar.style.width = "100%"; pct.textContent = "100%";
+      return;
+    }
+    var secs = Math.floor(diff / 1000);
+    set("d", Math.floor(secs / 86400));
+    set("h", Math.floor(secs % 86400 / 3600));
+    set("m", Math.floor(secs % 3600 / 60));
+    set("s", secs % 60);
+    var p = Math.max(0, Math.min(100, (now - START) / (TARGET - START) * 100));
+    bar.style.width = p.toFixed(2) + "%";
+    pct.textContent = p.toFixed(1) + "%";
+  }
+  frame();
+  setInterval(frame, 250);
+
+  setPoster(TRAILERS[current]);
+  syncUI();
+})();
+</script>
+</body>
+</html>
